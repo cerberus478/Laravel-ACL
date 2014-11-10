@@ -2,14 +2,14 @@
 
 	class GroupController extends \BaseController {
 
-		public function indexAction()
+		public function index()
 		{
 			return View::make("group/index", [
 				"groups" => Group::all()
 			]);
 		}
 
-		public function addAction()
+		public function add()
 		{
 			$form = new GroupForm();
 
@@ -33,7 +33,7 @@
 			]);
 		}
 
-		public function editAction()
+		public function edit()
 		{
 			$form = new GroupForm();
 
@@ -66,7 +66,7 @@
 			]);
 		}
 
-		public function deleteAction()
+		public function delete()
 		{
 			$form = new GroupForm();
 

@@ -1,67 +1,95 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Auth\Reminders\RemindableTrait;
+use Illuminate\Auth\UserInterface;
+use Illuminate\Auth\UserTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends Eloquent implements UserInterface, RemindableInterface
+{
+  use UserTrait;
+  use SoftDeletingTrait;
+  use RemindableTrait;
 
-	use UserTrait, RemindableTrait;
+  /**
+   * @var string
+   */
+  protected $table = "user";
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'user';
-	protected $hidden = ["password"];
+  /**
+   * @var array
+   */
+  protected $hidden = ["password"];
 
-	public function getAuthIdentifier()
-	{
-		return $this->getKey();
-	}
+  /**
+   * @var array
+   */
+  protected $dates = ["deleted_at"];
 
-	public function getAuthPassword()
-	{
-		return $this->password;
-	}
+  /**
+   * @return mixed
+   */
+  public function getAuthIdentifier()
+  {
+    return $this->getKey();
+  }
 
-	public function getRememberToken()
-	{
-		return $this->remember_token;
-	}
+  /**
+   * @return string
+   */
+  public function getAuthPassword()
+  {
+    return $this->password;
+  }
 
-	public function setRememberToken($value)
-	{
-		$this->remember_token = $value;
-	}
+  /**
+   * @return string
+   */
+  public function getRememberToken()
+  {
+    return $this->remember_token;
+  }
 
-	public function getRememberTokenName()
-	{
-		return "remember_token";
-	}
+  /**
+   * @param string $value
+   *
+   * @return void
+   */
+  public function setRememberToken($value)
+  {
+    $this->remember_token = $value;
+  }
 
-	public function getReminderEmail()
-	{
-		return $this->email;
-	}
+  /**
+   * @return string
+   */
+  public function getRememberTokenName()
+  {
+    return "remember_token";
+  }
 
-	public static $rules = array(
-		'username' => 'required',
-		'password' => 'required'
-	);
+  /**
+   * @return string
+   */
+  public function getReminderEmail()
+  {
+    return $this->email;
+  }
 
-	public function groups()
-	{
-		return $this->belongsToMany("Group")->withTimestamps();
-	}
+  /**
+   * @var array
+   */
+  public static $rules = [
+    "username" => "required",
+    "password" => "required"
+  ];
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	//protected $hidden = array('password', 'remember_token');
-
+  /**
+   * @return BelongsToMany
+   */
+  public function groups()
+  {
+    return $this->belongsToMany("Group")->withTimestamps();
+  }
 }
