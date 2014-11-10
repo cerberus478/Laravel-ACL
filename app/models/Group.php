@@ -1,23 +1,44 @@
 <?php
 
-class Group extends \Eloquent {
-	protected $table = "group";
-	protected $softDelete = true;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-	protected $guarded = [
-		"id",
-		"created_at",
-		"updated_at",
-		"deleted_at"
-	];
+class Group extends Eloquent
+{
+  use SoftDeletingTrait;
 
-	public function resources()
-	{
-		return $this->belongsToMany("Resource")->withTimestamps();
-	}
+  /**
+   * @var string
+   */
+  protected $table = "group";
 
-	public function users()
-	{
-		return $this->belongsToMany("User")->withTimestamps();
-	}
+  /**
+   * @var array
+   */
+  protected $dates = ["deleted_at"];
+
+  /**
+   * @var array
+   */
+  protected $guarded = [
+    "id",
+    "created_at",
+    "updated_at",
+    "deleted_at"
+  ];
+
+  /**
+   * @return BelongsToMany
+   */
+  public function resources()
+  {
+    return $this->belongsToMany("Resource")->withTimestamps();
+  }
+
+  /**
+   * @return BelongsToMany
+   */
+  public function users()
+  {
+    return $this->belongsToMany("User")->withTimestamps();
+  }
 }

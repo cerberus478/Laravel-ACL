@@ -6,86 +6,141 @@ use Illuminate\Database\Schema\Blueprint;
 class BaseMigration extends Migration
 {
 
-	protected $table;
+  /**
+   * @var string
+   */
+  protected $table;
 
-	public function getTable()
-	{
-		if($this->table == null){
-			throw new Exception("Table not set.");
-		}
+  /**
+   * @return string
+   *
+   * @throws Exception
+   */
+  public function getTable()
+  {
+    if ($this->table == null) {
+      throw new Exception("Table not set.");
+    }
 
-		return $this->table;
-	}
+    return $this->table;
+  }
 
-	public function setTable(Blueprint $table)
-	{
-		$this->table = $table;
-		return $this;
-	}
+  /**
+   * @param Blueprint $table
+   *
+   * @return $this
+   */
+  public function setTable(Blueprint $table)
+  {
+    $this->table = $table;
 
-	public function addNullable($type, $key)
-	{
-		$types = [
-			"boolean",
-			"dateTime",
-			"integer",
-			"string",
-			"text"
-		];
+    return $this;
+  }
 
-		if(in_array($type, $types)){
-			$this->getTable()
-				->{$type}($key)
-				->nullable()
-				->default(null);
-		}
+  /**
+   * @param string $type
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function addNullable($type, $key)
+  {
+    $types = [
+      "boolean",
+      "dateTime",
+      "integer",
+      "string",
+      "text"
+    ];
 
-		return $this;
-	}
+    if (in_array($type, $types)) {
+      $this->getTable()->{$type}($key)->nullable()->default(null);
+    }
 
-	public function addTimestamps()
-	{
-		$this->addNullable("dateTime", "created_at");
-		$this->addNullable("dateTime", "updated_at");
-		$this->addNullable("dateTime", "deleted_at");
-		return $this;
-	}
+    return $this;
+  }
 
-	public function addPrimary()
-	{
-		$this->getTable()->increments("id");
-		return $this;
-	}
+  /**
+   * @return $this
+   */
+  public function addTimestamps()
+  {
+    $this->getTable()->timestamps();
+    $this->getTable()->softDeletes();
 
-	public function addForeign($key)
-	{
-		$this->addNullable("integer", $key);
-		$this->getTable()->index($key);
-		return $this;
-	}
+    return $this;
+  }
 
-	public function addBoolean($key)
-	{
-		return $this->addNullable("boolean", $key);
-	}
+  /**
+   * @return $this
+   */
+  public function addPrimary()
+  {
+    $this->getTable()->increments("id");
 
-	public function addDateTime($key)
-	{
-		return $this->addNullable("dateTime", $key);
-	}
+    return $this;
+  }
 
-	public function addInteger($key)
-	{
-		return $this->addNullable("integer", $key);
-	}
+  /**
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function addForeign($key)
+  {
+    $this->addNullable("integer", $key);
+    $this->getTable()->index($key);
 
-	public function addString($key)
-	{
-		return $this->addNullable("string", $key);
-	}
+    return $this;
+  }
 
-	public function addText($key)
-	{
-		return $this->addNullable("text", $key);
-	}
+  /**
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function addBoolean($key)
+  {
+    return $this->addNullable("boolean", $key);
+  }
+
+  /**
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function addDateTime($key)
+  {
+    return $this->addNullable("dateTime", $key);
+  }
+
+  /**
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function addInteger($key)
+  {
+    return $this->addNullable("integer", $key);
+  }
+
+  /**
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function addString($key)
+  {
+    return $this->addNullable("string", $key);
+  }
+
+  /**
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function addText($key)
+  {
+    return $this->addNullable("text", $key);
+  }
 }
